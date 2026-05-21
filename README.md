@@ -76,15 +76,3 @@ GitHub Actions runs the CI quality gate on pushes to `main` and pull requests:
 - run Playwright E2E against a production build
 
 Deployment is intended to run through Vercel's Git integration. Configure the Vercel project with the same environment variables listed in `.env.example`, then connect the GitHub repository so pushes to `main` deploy automatically after CI passes.
-
-## Current Status
-
-- Day 1 and Day 2 are complete in code.
-- The dashboard, application CRUD, application detail/edit views, candidate profile persistence, deterministic parser, matching logic, Supabase schema, Supabase auth shell, protected route redirects, Vitest tests, and Playwright auth-guard tests are in place.
-- Saved match reports are the next implementation target.
-
-## Portfolio Framing
-
-**CV bullet:** Built ApplyPilot, a full-stack job application platform with authentication, job tracking, CV/job-description matching, interview preparation, analytics dashboards, automated tests, and production deployment.
-
-**Interview story:** I built ApplyPilot around my own job-search workflow. The product turns applications from scattered notes into measurable data: tracked applications, parsed job descriptions, skill-gap analysis, tailored preparation, and response-rate analytics.
