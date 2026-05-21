@@ -75,4 +75,11 @@ GitHub Actions runs the CI quality gate on pushes to `main` and pull requests:
 - run Vitest
 - run Playwright E2E against a production build
 
+The CI workflow uses these **repository Actions secrets** when available:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+
+The current E2E suite only covers logged-out flows, so CI falls back to dummy publishable values when GitHub does not expose those secrets. That keeps pull request builds deterministic while real Supabase values remain configured for local development and deployment. `SUPABASE_SECRET_KEY` is not required by CI and should not be exposed to tests that only use the publishable auth path.
+
 Deployment is intended to run through Vercel's Git integration. Configure the Vercel project with the same environment variables listed in `.env.example`, then connect the GitHub repository so pushes to `main` deploy automatically after CI passes.
