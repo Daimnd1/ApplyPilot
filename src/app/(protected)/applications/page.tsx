@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Route } from "next";
-import { ExternalLink, Search } from "lucide-react";
+import { ArrowRight, ExternalLink, Search } from "lucide-react";
 import { buttonStyles } from "@/components/ui/button";
 import { listApplicationsForCurrentUser } from "@/features/applications/queries";
 
@@ -43,7 +43,7 @@ export default async function ApplicationsPage() {
           applications.map((application) => (
             <div
               key={application.id}
-              className="grid grid-cols-[1.1fr_1fr_0.7fr_0.7fr_0.4fr] items-center gap-3 border-b border-[var(--line)] px-4 py-4 text-sm last:border-b-0"
+              className="grid grid-cols-[1.1fr_1fr_0.7fr_0.7fr_0.4fr] items-center gap-3 border-b border-[var(--line)] px-4 py-4 text-sm transition-colors hover:bg-stone-50 focus-within:bg-stone-50 last:border-b-0"
             >
               <div>
                 <div className="font-medium">{application.company}</div>
@@ -63,8 +63,13 @@ export default async function ApplicationsPage() {
                 {application.status.replace("-", " ")}
               </span>
               <span>{application.deadline ?? "Open"}</span>
-              <Link href={`/applications/${application.id}` as Route} className="font-medium text-teal-800">
-                Open
+              <Link
+                href={`/applications/${application.id}` as Route}
+                className="inline-flex min-h-9 w-fit items-center gap-1 rounded-md border border-teal-200 bg-teal-50 px-3 font-semibold text-teal-900 shadow-sm transition-colors hover:border-teal-300 hover:bg-teal-100 focus:outline-none focus:ring-2 focus:ring-teal-700 focus:ring-offset-2"
+                aria-label={`View ${application.roleTitle} at ${application.company}`}
+              >
+                Details
+                <ArrowRight size={15} />
               </Link>
             </div>
           ))
