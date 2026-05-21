@@ -1,5 +1,7 @@
 # ApplyPilot
 
+![CI](https://github.com/Daimnd1/ApplyPilot/actions/workflows/ci.yml/badge.svg)
+
 ApplyPilot is a portfolio-grade full-stack app for software students and junior developers who want to make job searching measurable. It combines an application tracker with job-description parsing, CV/project matching, interview prep, and analytics.
 
 ## MVP Stack
@@ -61,6 +63,19 @@ npm run lint
 npm run test
 npm run test:e2e
 ```
+
+## CI/CD
+
+GitHub Actions runs the CI quality gate on pushes to `main` and pull requests:
+
+- install dependencies with `npm ci`
+- install Playwright Chromium
+- run TypeScript checks
+- run ESLint
+- run Vitest
+- run Playwright E2E against a production build
+
+Deployment is intended to run through Vercel's Git integration. Configure the Vercel project with the same environment variables listed in `.env.example`, then connect the GitHub repository so pushes to `main` deploy automatically after CI passes.
 
 ## Current Status
 
