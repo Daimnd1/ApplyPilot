@@ -22,4 +22,6 @@ Focus: Candidate profile and match report.
 
 Completed candidate profile persistence: editable headline, summary, skills, project bullets, education, languages, links, preferred roles, and profile helper tests.
 
-Next: build saved match reports from candidate profile data and parsed job descriptions.
+Completed saved match reports: generate reports from candidate profile skills and saved job-description analysis, persist score/recommendations, and show report history on application detail.
+
+Next: interview prep generation and editable preparation notes.

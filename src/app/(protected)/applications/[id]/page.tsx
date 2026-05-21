@@ -5,6 +5,8 @@ import { CalendarDays, ExternalLink, MapPin, Pencil, Trash2 } from "lucide-react
 import { deleteApplicationAction } from "@/features/applications/actions";
 import { getApplicationDetailsForCurrentUser } from "@/features/applications/queries";
 import { buttonStyles } from "@/components/ui/button";
+import { MatchReportForm } from "@/features/job-analysis/match-report-form";
+import { listMatchReportsForApplication } from "@/features/job-analysis/match-report-queries";
 
 export default async function ApplicationDetailPage({
   params
@@ -29,6 +31,8 @@ export default async function ApplicationDetailPage({
   }
 
   const { application, jobDescription } = result;
+  const matchReportsResult = await listMatchReportsForApplication(id);
+  const matchReports = matchReportsResult.ok ? matchReportsResult.reports : [];
 
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
@@ -105,6 +109,55 @@ export default async function ApplicationDetailPage({
           <p className="mt-3 text-sm text-[var(--muted)]">No job description has been saved for this application.</p>
         )}
       </section>
+
+      <section className="rounded-lg border border-[var(--line)] bg-white p-5 shadow-sm">
+        <div className="flex flex-col gap-4 border-b border-[var(--line)] pb-4 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <h2 className="text-lg font-semibold">Match Reports</h2>
+            <p className="mt-1 text-sm text-[var(--muted)]">
+              Compare extracted job skills against the saved candidate profile.
+            </p>
+          </div>
+          <MatchReportForm
+            applicationId={application.id}
+            disabledReason={jobDescription ? undefined : "Save a job description first."}
+          />
+        </div>
+
+        {!matchReportsResult.ok ? (
+          <p className="mt-4 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
+            {matchReportsResult.error}
+          </p>
+        ) : null}
+
+        {matchReports.length > 0 ? (
+          <div className="mt-5 space-y-4">
+            {matchReports.map((report) => (
+              <article key={report.id} className="rounded-md border border-[var(--line)] p-4">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <h3 className="text-base font-semibold">Match score</h3>
+                    <p className="mt-1 text-sm text-[var(--muted)]">
+                      Generated {new Date(report.createdAt).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <span className="rounded-full bg-teal-800 px-3 py-1 text-sm font-semibold text-white">
+                    {report.score}%
+                  </span>
+                </div>
+
+                <div className="mt-4 grid gap-4 md:grid-cols-2">
+                  <SkillGroup title="Matched skills" values={report.matchedSkills} />
+                  <GapGroup title="Missing skills" values={report.missingSkills} />
+                </div>
+                <TextList title="Recommendations" values={report.recommendations} />
+              </article>
+            ))}
+          </div>
+        ) : (
+          <p className="mt-4 text-sm text-[var(--muted)]">No match reports yet.</p>
+        )}
+      </section>
     </main>
   );
 }
@@ -150,6 +203,25 @@ function TextList({ title, values }: { title: string; values: string[] }) {
       ) : (
         <p className="mt-2 text-sm text-[var(--muted)]">None detected.</p>
       )}
+    </div>
+  );
+}
+
+function GapGroup({ title, values }: { title: string; values: string[] }) {
+  return (
+    <div>
+      <h3 className="text-sm font-semibold text-[var(--muted)]">{title}</h3>
+      <div className="mt-2 flex flex-wrap gap-2">
+        {values.length > 0 ? (
+          values.map((value) => (
+            <span key={value} className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-sm text-amber-900">
+              {value}
+            </span>
+          ))
+        ) : (
+          <span className="text-sm text-[var(--muted)]">None detected.</span>
+        )}
+      </div>
     </div>
   );
 }
