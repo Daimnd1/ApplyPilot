@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Route } from "next";
 import { ExternalLink, Search } from "lucide-react";
 import { buttonStyles } from "@/components/ui/button";
 import { listApplicationsForCurrentUser } from "@/features/applications/queries";
@@ -31,17 +32,18 @@ export default async function ApplicationsPage() {
       ) : null}
 
       <div className="overflow-hidden rounded-lg border border-[var(--line)] bg-white shadow-sm">
-        <div className="grid grid-cols-[1.1fr_1fr_0.7fr_0.7fr] border-b border-[var(--line)] px-4 py-3 text-sm font-semibold text-[var(--muted)]">
+        <div className="grid grid-cols-[1.1fr_1fr_0.7fr_0.7fr_0.4fr] border-b border-[var(--line)] px-4 py-3 text-sm font-semibold text-[var(--muted)]">
           <span>Company</span>
           <span>Role</span>
           <span>Status</span>
           <span>Deadline</span>
+          <span>View</span>
         </div>
         {applications.length > 0 ? (
           applications.map((application) => (
             <div
               key={application.id}
-              className="grid grid-cols-[1.1fr_1fr_0.7fr_0.7fr] items-center gap-3 border-b border-[var(--line)] px-4 py-4 text-sm last:border-b-0"
+              className="grid grid-cols-[1.1fr_1fr_0.7fr_0.7fr_0.4fr] items-center gap-3 border-b border-[var(--line)] px-4 py-4 text-sm last:border-b-0"
             >
               <div>
                 <div className="font-medium">{application.company}</div>
@@ -61,6 +63,9 @@ export default async function ApplicationsPage() {
                 {application.status.replace("-", " ")}
               </span>
               <span>{application.deadline ?? "Open"}</span>
+              <Link href={`/applications/${application.id}` as Route} className="font-medium text-teal-800">
+                Open
+              </Link>
             </div>
           ))
         ) : (

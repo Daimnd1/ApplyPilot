@@ -64,9 +64,9 @@ npm run test:e2e
 
 ## Current Status
 
-- Day 1 is complete and Day 2 is in progress.
-- The dashboard, application list, candidate profile shell, deterministic parser, matching logic, Supabase schema, Supabase auth shell, protected route redirects, create-application flow, Vitest tests, and Playwright auth-guard tests are in place.
-- Edit/delete application actions and the application detail view are the next implementation targets.
+- Day 1 and Day 2 are complete in code.
+- The dashboard, application CRUD, application detail/edit views, candidate profile shell, deterministic parser, matching logic, Supabase schema, Supabase auth shell, protected route redirects, Vitest tests, and Playwright auth-guard tests are in place.
+- Candidate profile persistence and match reports are the next implementation targets.
 
 ## Portfolio Framing
 

@@ -8,8 +8,14 @@ We completed the planned foundation plus the layout/auth shell: repo setup, app 
 
 ## Day 2
 
-Status: In progress.
+Status: Complete.
 
-We started database-backed applications: create application, parse pasted job description into saved skills/analysis, list saved applications for the signed-in user, and show clear migration/load errors.
+We completed database-backed application CRUD code: create, list, detail, edit, delete, saved job-description analysis, and clear migration/load errors.
 
-Next: apply the Supabase migration if needed, then add edit/delete and detail view.
+Note: the Supabase migration still needs to be applied in the Supabase project before live data works.
+
+## Day 3
+
+Status: Next.
+
+Focus: Candidate profile and match report.

@@ -26,6 +26,7 @@ export const applicationSchema = z.object({
   deadline: z.string().optional(),
   notes: z.string().optional(),
   contactName: z.string().optional(),
+  salary: z.string().optional(),
   skills: z.array(z.string()).default([]),
   createdAt: z.string(),
   updatedAt: z.string()
@@ -48,9 +49,18 @@ export const createApplicationSchema = z.object({
 });
 
 export type CreateApplicationInput = z.infer<typeof createApplicationSchema>;
+export const updateApplicationSchema = createApplicationSchema.extend({
+  id: z.string().uuid("Invalid application id.")
+});
+
+export const deleteApplicationSchema = z.object({
+  id: z.string().uuid("Invalid application id.")
+});
+
+export type UpdateApplicationInput = z.infer<typeof updateApplicationSchema>;
 
 export type ApplicationFormFieldErrors = Partial<
-  Record<keyof CreateApplicationInput, string[]>
+  Record<keyof UpdateApplicationInput, string[]>
 >;
 
 export function mapApplicationRow(row: Record<string, unknown>): Application {
@@ -65,6 +75,7 @@ export function mapApplicationRow(row: Record<string, unknown>): Application {
     deadline: row.deadline ?? undefined,
     notes: row.notes ?? undefined,
     contactName: row.contact_name ?? undefined,
+    salary: row.salary ?? undefined,
     skills: row.skills ?? [],
     createdAt: row.created_at,
     updatedAt: row.updated_at
