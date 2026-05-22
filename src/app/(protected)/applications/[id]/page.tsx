@@ -7,6 +7,11 @@ import { getApplicationDetailsForCurrentUser } from "@/features/applications/que
 import { buttonStyles } from "@/components/ui/button";
 import { MatchReportForm } from "@/features/job-analysis/match-report-form";
 import { listMatchReportsForApplication } from "@/features/job-analysis/match-report-queries";
+import {
+  InterviewPrepGenerateForm,
+  InterviewPrepNotesForm
+} from "@/features/interview-prep/prep-forms";
+import { getInterviewPrepForApplication } from "@/features/interview-prep/prep-queries";
 
 export default async function ApplicationDetailPage({
   params
@@ -31,8 +36,12 @@ export default async function ApplicationDetailPage({
   }
 
   const { application, jobDescription } = result;
-  const matchReportsResult = await listMatchReportsForApplication(id);
+  const [matchReportsResult, interviewPrepResult] = await Promise.all([
+    listMatchReportsForApplication(id),
+    getInterviewPrepForApplication(id)
+  ]);
   const matchReports = matchReportsResult.ok ? matchReportsResult.reports : [];
+  const interviewPrep = interviewPrepResult.ok ? interviewPrepResult.prep : null;
 
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
@@ -158,6 +167,41 @@ export default async function ApplicationDetailPage({
           <p className="mt-4 text-sm text-[var(--muted)]">No match reports yet.</p>
         )}
       </section>
+
+      <section className="rounded-lg border border-[var(--line)] bg-white p-5 shadow-sm">
+        <div className="flex flex-col gap-4 border-b border-[var(--line)] pb-4 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <h2 className="text-lg font-semibold">Interview Prep</h2>
+            <p className="mt-1 text-sm text-[var(--muted)]">
+              Generate question prompts from the saved role and job-description analysis.
+            </p>
+          </div>
+          <InterviewPrepGenerateForm
+            applicationId={application.id}
+            disabledReason={jobDescription ? undefined : "Save a job description first."}
+            hasPrep={Boolean(interviewPrep)}
+          />
+        </div>
+
+        {!interviewPrepResult.ok ? (
+          <p className="mt-4 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
+            {interviewPrepResult.error}
+          </p>
+        ) : null}
+
+        {interviewPrep ? (
+          <>
+            <div className="mt-5 grid gap-5 lg:grid-cols-3">
+              <QuestionList title="Technical" values={interviewPrep.technicalQuestions} />
+              <QuestionList title="Behavioral" values={interviewPrep.behavioralQuestions} />
+              <QuestionList title="Ask the company" values={interviewPrep.companyQuestions} />
+            </div>
+            <InterviewPrepNotesForm applicationId={application.id} notes={interviewPrep.notes} />
+          </>
+        ) : (
+          <p className="mt-4 text-sm text-[var(--muted)]">No interview prep generated yet.</p>
+        )}
+      </section>
     </main>
   );
 }
@@ -222,6 +266,23 @@ function GapGroup({ title, values }: { title: string; values: string[] }) {
           <span className="text-sm text-[var(--muted)]">None detected.</span>
         )}
       </div>
+    </div>
+  );
+}
+
+function QuestionList({ title, values }: { title: string; values: string[] }) {
+  return (
+    <div>
+      <h3 className="text-sm font-semibold text-[var(--muted)]">{title}</h3>
+      {values.length > 0 ? (
+        <ol className="mt-2 list-decimal space-y-2 pl-5 text-sm text-stone-700">
+          {values.map((value) => (
+            <li key={value}>{value}</li>
+          ))}
+        </ol>
+      ) : (
+        <p className="mt-2 text-sm text-[var(--muted)]">No prompts generated.</p>
+      )}
     </div>
   );
 }
