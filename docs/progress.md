@@ -13,3 +13,5 @@ Status: In progress.
 Focus: Interview prep generation and editable preparation notes.
 
 Completed saved interview prep: generated technical, behavioral, and company question prompts from saved job data, plus editable preparation notes on the application detail page.
+
+Completed live dashboard analytics: saved application totals, response rate, pipeline status distribution, frequent job skills, and recurring gaps from latest match reports.
