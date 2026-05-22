@@ -32,25 +32,29 @@ export default async function ApplicationsPage() {
       ) : null}
 
       <div className="overflow-hidden rounded-lg border border-[var(--line)] bg-white shadow-sm">
-        <div className="grid grid-cols-[1.1fr_1fr_0.7fr_0.7fr_0.4fr] border-b border-[var(--line)] px-4 py-3 text-sm font-semibold text-[var(--muted)]">
+        <div className="grid grid-cols-[1.1fr_1fr_0.7fr_0.7fr] border-b border-[var(--line)] px-4 py-3 text-sm font-semibold text-[var(--muted)]">
           <span>Company</span>
           <span>Role</span>
           <span>Status</span>
           <span>Deadline</span>
-          <span>View</span>
         </div>
         {applications.length > 0 ? (
           applications.map((application) => (
             <div
               key={application.id}
-              className="grid grid-cols-[1.1fr_1fr_0.7fr_0.7fr_0.4fr] items-center gap-3 border-b border-[var(--line)] px-4 py-4 text-sm transition-colors hover:bg-stone-50 focus-within:bg-stone-50 last:border-b-0"
+              className="group relative grid grid-cols-[1.1fr_1fr_0.7fr_0.7fr] items-center gap-3 overflow-hidden border-b border-[var(--line)] px-4 py-4 pr-16 text-sm transition-colors hover:bg-stone-50 focus-within:bg-stone-50 last:border-b-0"
             >
+              <Link
+                href={`/applications/${application.id}` as Route}
+                className="absolute inset-0 z-0 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-teal-700"
+                aria-label={`Open ${application.roleTitle} at ${application.company}`}
+              />
               <div>
                 <div className="font-medium">{application.company}</div>
                 {application.jobUrl ? (
                   <a
                     href={application.jobUrl}
-                    className="mt-1 inline-flex items-center gap-1 text-xs text-teal-800"
+                    className="relative z-10 mt-1 inline-flex items-center gap-1 text-xs text-teal-800 hover:underline focus:outline-none focus:ring-2 focus:ring-teal-700 focus:ring-offset-2"
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -63,14 +67,12 @@ export default async function ApplicationsPage() {
                 {application.status.replace("-", " ")}
               </span>
               <span>{application.deadline ?? "Open"}</span>
-              <Link
-                href={`/applications/${application.id}` as Route}
-                className="inline-flex min-h-9 w-fit items-center gap-1 rounded-md border border-teal-200 bg-teal-50 px-3 font-semibold text-teal-900 shadow-sm transition-colors hover:border-teal-300 hover:bg-teal-100 focus:outline-none focus:ring-2 focus:ring-teal-700 focus:ring-offset-2"
-                aria-label={`View ${application.roleTitle} at ${application.company}`}
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute right-4 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 translate-x-10 items-center justify-center rounded-full border border-teal-200 bg-teal-50 text-teal-900 opacity-0 shadow-sm transition duration-200 group-hover:translate-x-0 group-hover:opacity-100 group-focus-within:translate-x-0 group-focus-within:opacity-100"
               >
-                Details
-                <ArrowRight size={15} />
-              </Link>
+                <ArrowRight size={18} />
+              </span>
             </div>
           ))
         ) : (
